@@ -10,11 +10,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Easy Recipe',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Easy Recipe'),
     );
   }
 }
@@ -29,11 +29,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
+  List<String> ingredientList = List.empty(growable: true);
+
+   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchIngredientFromDataBase();
+  }
+
+  void fetchIngredientFromDataBase() {
+    //TODO: Fetch from Database
+    for(int i = 0; i < 5; i++) {
+      ingredientList.add(
+          'Farinha'
+      );
+    }
+  }
+
+  List<Widget> _provideWidgetItems() {
+    List<Widget> widgets = List.empty(growable: true);
+    for(int i = 0; i < ingredientList.length; i++) {
+      widgets.add(
+          ListTile(title: Center(child: Text(ingredientList[i])))
+      );
+    }
+    return widgets;
+  }
+
+  void _addNewIngredient() {
     setState(() {
-      _counter++;
+      ingredientList.add("Leite condensado");
     });
   }
 
@@ -45,20 +72,26 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: (Text(
+                'Selecione os itens para a sua receita',
+                style: Theme.of(context).textTheme.headline4,
+                textAlign: TextAlign.center,
+              )),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            Expanded(
+                child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: _provideWidgetItems(),
+            ))
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _addNewIngredient,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
