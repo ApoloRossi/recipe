@@ -1,3 +1,5 @@
+import 'package:easy_recipe/sqlite/daos/IngredientDao.dart';
+import 'package:easy_recipe/sqlite/models/Ingredient.dart';
 import 'package:flutter/material.dart';
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -11,6 +13,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   List<String> ingredientList = List.empty(growable: true);
+  final IngredientDao ingredientDao = IngredientDao();
 
   final TextEditingController _textFieldController = TextEditingController();
 
@@ -21,13 +24,16 @@ class _MyHomePageState extends State<MyHomePage> {
     fetchIngredientFromDataBase();
   }
 
-  void fetchIngredientFromDataBase() {
-    //TODO: Fetch from Database
-    /*for(int i = 0; i < 15; i++) {
-      ingredientList.add(
-          'Farinha'
-      );
-    }*/
+  void fetchIngredientFromDataBase() async {
+    List<Ingredient> ingredientes = await ingredientDao.getIngredients();
+
+    setState(() {
+      for (var element in ingredientes) {
+        ingredientList.add(
+            element.name
+        );
+      }
+    });
   }
 
   List<Widget> _provideWidgetItems() {
@@ -38,6 +44,13 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
     return widgets;
+  }
+
+  void insertIngredient(String ingredient) {
+    ingredientDao.insertIngredient(
+      Ingredient(name: ingredient)
+    );
+    ingredientList.add(_textFieldController.text);
   }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
@@ -65,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
-                    ingredientList.add(_textFieldController.text);
+                    insertIngredient(_textFieldController.text);
                     _textFieldController.clear();
                     Navigator.pop(context);
                   });
