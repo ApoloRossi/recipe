@@ -12,6 +12,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<String> ingredientList = List.empty(growable: true);
 
+  final TextEditingController _textFieldController = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -21,11 +23,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void fetchIngredientFromDataBase() {
     //TODO: Fetch from Database
-    for(int i = 0; i < 5; i++) {
+    /*for(int i = 0; i < 15; i++) {
       ingredientList.add(
           'Farinha'
       );
-    }
+    }*/
   }
 
   List<Widget> _provideWidgetItems() {
@@ -38,10 +40,41 @@ class _MyHomePageState extends State<MyHomePage> {
     return widgets;
   }
 
-  void _addNewIngredient() {
-    setState(() {
-      ingredientList.add("Leite condensado");
-    });
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Qual produto deseja adicionar?'),
+            content: TextField(
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: "nome do produto"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Cancelar'),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              TextButton(
+                /*color: Colors.green,
+                textColor: Colors.white,*/
+                child: Text('OK'),
+                onPressed: () {
+                  setState(() {
+                    ingredientList.add(_textFieldController.text);
+                    _textFieldController.clear();
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+
+            ],
+          );
+        });
   }
 
   @override
@@ -71,7 +104,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addNewIngredient,
+        onPressed: () {
+          _displayTextInputDialog(context);
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
