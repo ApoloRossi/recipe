@@ -1,4 +1,5 @@
 import 'package:easy_recipe/screens/ingredients_screen.dart';
+import 'package:easy_recipe/screens/loading_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +16,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const MyHomePage(title: 'Easy Recipe'),
+      routes: {
+        "/": (context) => const MyHomePage(title: 'Easy Recipe'),
+        "/loader": (context) => const LoaderPage(),
+      }
+
     );
   }
 }

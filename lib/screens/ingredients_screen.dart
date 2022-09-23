@@ -140,6 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ElevatedButton(
                           onPressed: () {
                             //TODO: Chamar tela de Loading
+                            Navigator.pushNamed(context, "/loader");
                           },
                           child: Text("Gerar Receita"),
                           style: ButtonStyle(
