@@ -1,6 +1,7 @@
 import 'package:easy_recipe/sqlite/daos/IngredientDao.dart';
 import 'package:easy_recipe/sqlite/models/Ingredient.dart';
 import 'package:flutter/material.dart';
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -11,9 +12,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   List<String> ingredientList = List.empty(growable: true);
   final IngredientDao ingredientDao = IngredientDao();
+  Map<int, bool> selectedFlag = {};
 
   final TextEditingController _textFieldController = TextEditingController();
 
@@ -29,27 +30,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       for (var element in ingredientes) {
-        ingredientList.add(
-            element.name
-        );
+        ingredientList.add(element.name);
       }
     });
   }
 
-  List<Widget> _provideWidgetItems() {
-    List<Widget> widgets = List.empty(growable: true);
-    for(int i = 0; i < ingredientList.length; i++) {
-      widgets.add(
-          ListTile(title: Center(child: Text(ingredientList[i])))
-      );
-    }
-    return widgets;
+  void onTap(bool isSelected, int index) {
+    setState(() {
+      selectedFlag[index] = !isSelected;
+    });
+  }
+
+  Widget _buildSelectIcon(bool isSelected, BuildContext context) {
+    return Icon(
+      isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+      color: Theme.of(context).primaryColor,
+    );
   }
 
   void insertIngredient(String ingredient) {
-    ingredientDao.insertIngredient(
-      Ingredient(name: ingredient)
-    );
+    ingredientDao.insertIngredient(Ingredient(name: ingredient));
     ingredientList.add(_textFieldController.text);
   }
 
@@ -73,8 +73,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               TextButton(
-                /*color: Colors.green,
-                textColor: Colors.white,*/
                 child: Text('OK'),
                 onPressed: () {
                   setState(() {
@@ -84,7 +82,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   });
                 },
               ),
-
             ],
           );
         });
@@ -93,36 +90,71 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: (Text(
-                'Selecione os itens para a sua receita',
-                style: Theme.of(context).textTheme.headline4,
-                textAlign: TextAlign.center,
-              )),
-            ),
-            Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: _provideWidgetItems(),
-                ))
-          ],
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _displayTextInputDialog(context);
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: (Text(
+                  'Selecione os itens para a sua receita',
+                  style: Theme.of(context).textTheme.headline4,
+                  textAlign: TextAlign.center,
+                )),
+              ),
+              Expanded(
+                  child: ListView.builder(
+                itemBuilder: (builder, index) {
+                  selectedFlag[index] = selectedFlag[index] ?? false;
+                  bool isSelected = selectedFlag[index] ?? false;
+
+                  return ListTile(
+                      onTap: () => onTap(isSelected, index),
+                      title: Text(ingredientList[index]),
+                      leading: _buildSelectIcon(isSelected, context));
+                },
+                itemCount: ingredientList.length,
+              )),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            _displayTextInputDialog(context);
+                          },
+                          child: Text("Adicionar Ingrediente"),
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: BorderSide(color: Colors.red))))))),
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            //TODO: Chamar tela de Loading
+                          },
+                          child: Text("Gerar Receita"),
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                                    (Set<MaterialState> states) {
+                                    return Colors.green;
+                                },
+                              ),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0)))))))
+            ],
+          ),
+        ) // This trailing comma makes auto-formatting nicer for build methods.
+        );
   }
 }
