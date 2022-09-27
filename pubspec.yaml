@@ -11,10 +11,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  http: ^0.13.5
   sqflite: ^2.0.3-nullsafety.2
   path:
-
   cupertino_icons: ^1.0.2
+
 
 dev_dependencies:
   flutter_test:

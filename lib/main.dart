@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         "/": (context) => const MyHomePage(title: 'Easy Recipe'),
-        "/loader": (context) => const LoaderPage(),
+        "/loader": (context) =>  LoaderPage(),
       }
 
     );
