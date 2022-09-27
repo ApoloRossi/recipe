@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:easy_recipe/sqlite/daos/IngredientDao.dart';
 import 'package:easy_recipe/sqlite/models/Ingredient.dart';
+import 'package:easy_recipe/sqlite/models/IngredientsArguments.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -17,7 +15,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<String> ingredientList = List.empty(growable: true);
   final IngredientDao ingredientDao = IngredientDao();
-  Map<int, bool> selectedFlag = {};
+  Map<String, bool> selectedFlag = {};
 
   final TextEditingController _textFieldController = TextEditingController();
 
@@ -40,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onTap(bool isSelected, int index) {
     setState(() {
-      selectedFlag[index] = !isSelected;
+      selectedFlag[ingredientList[index]] = !isSelected;
     });
   }
 
@@ -111,8 +109,10 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                   child: ListView.builder(
                 itemBuilder: (builder, index) {
-                  selectedFlag[index] = selectedFlag[index] ?? false;
-                  bool isSelected = selectedFlag[index] ?? false;
+                  selectedFlag[ingredientList[index]] =
+                      selectedFlag[ingredientList[index]] ?? false;
+                  bool isSelected =
+                      selectedFlag[ingredientList[index]] ?? false;
 
                   return ListTile(
                       onTap: () => onTap(isSelected, index),
@@ -142,19 +142,37 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, "/loader");
+                            final List<String> selectedIngredients =
+                                List.empty(growable: true);
+
+                            for (var element in selectedFlag.entries) {
+                              if (element.value == true) {
+                                selectedIngredients.add("${element.key}\n");
+                              }
+                            }
+
+                            if (selectedIngredients.isEmpty) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("Nenhum ingrediente selecionado"),
+                              ));
+                            } else {
+                              Navigator.pushNamed(context, "/loader", arguments: IngredientsArguments(selectedIngredients));
+                            }
                           },
                           child: Text("Gerar Receita"),
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-                                    (Set<MaterialState> states) {
-                                    return Colors.green;
+                              backgroundColor:
+                                  MaterialStateProperty.resolveWith<Color?>(
+                                (Set<MaterialState> states) {
+                                  return Colors.green;
                                 },
                               ),
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0)))))))
+                                      borderRadius:
+                                          BorderRadius.circular(18.0)))))))
             ],
           ),
         ) // This trailing comma makes auto-formatting nicer for build methods.
