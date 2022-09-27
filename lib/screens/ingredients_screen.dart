@@ -56,34 +56,6 @@ class _MyHomePageState extends State<MyHomePage> {
     ingredientList.add(_textFieldController.text);
   }
 
-  Future<String> generateRecipe() async {
-    try {
-      var response = await http
-          .post(
-        Uri.parse("https://api.openai.com/v1/completions"),
-        headers: {
-          HttpHeaders
-              .authorizationHeader: "Bearer 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",
-          HttpHeaders.acceptHeader: "application/json",
-          HttpHeaders.contentTypeHeader: "application/json",
-        },
-        body: jsonEncode({
-          "model": "text-davinci-002",
-          "prompt": "Write a recipe based on these ingredients and instructions:\n\nFrito Pie\n\nIngredients:\nFritos\nChili\nShredded cheddar cheese\nSweet white or red onions, diced small\nSour cream\n\nInstructions:",
-          "temperature": 0.3,
-          "max_tokens": 120,
-          "top_p": 1,
-          "frequency_penalty": 0.0,
-          "presence_penalty": 0.0
-        }),
-      ).timeout(const Duration(seconds: 20));
-      json.decode(response.body);
-    } on Exception catch (_e) {
-      print('$_e reached');
-    }
-    return "";
-  }
-
   Future<void> _displayTextInputDialog(BuildContext context) async {
     return showDialog(
         context: context,
@@ -170,9 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       width: double.infinity,
                       child: ElevatedButton(
                           onPressed: () {
-                            //TODO: Chamar tela de Loading
                             Navigator.pushNamed(context, "/loader");
-                            generateRecipe();
                           },
                           child: Text("Gerar Receita"),
                           style: ButtonStyle(

@@ -3,7 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../sqlite/models/RecipeArgument.dart';
+
 class LoaderPage extends StatefulWidget {
+  const LoaderPage({Key? key}) : super(key: key);
+
 
   @override
   State<LoaderPage> createState() => _LoaderPageState();
@@ -12,9 +16,10 @@ class LoaderPage extends StatefulWidget {
 
 class _LoaderPageState extends State<LoaderPage> {
 
+  String recipe = "";
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     generateRecipe();
   }
@@ -23,50 +28,38 @@ class _LoaderPageState extends State<LoaderPage> {
   Widget build(BuildContext context) {
     return ColoredBox(color: Colors.white, child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+      children: const [
         CircularProgressIndicator( key: Key("progress"), backgroundColor: Colors.white)
       ],
     ));
   }
 
-  Future<String> generateRecipe() async {
+  Future<void> generateRecipe() async {
     try {
       var response = await http
           .post(
-        Uri.parse("https://api.openai.com/v1/models/{model}"),
+        Uri.parse("https://api.openai.com/v1/completions"),
         headers: {
           HttpHeaders
-              .authorizationHeader: "Bearer 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",
+              .authorizationHeader: "Bearer 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",
           HttpHeaders.acceptHeader: "application/json",
           HttpHeaders.contentTypeHeader: "application/json",
         },
         body: jsonEncode({
           "model": "text-davinci-002",
           "prompt": "Write a recipe based on these ingredients and instructions:\n\nFrito Pie\n\nIngredients:\nFritos\nChili\nShredded cheddar cheese\nSweet white or red onions, diced small\nSour cream\n\nInstructions:",
-          "max_tokens": 6,
-          "temperature": 0,
-          "object": "model",
+          "temperature": 0.3,
+          "max_tokens": 120,
           "top_p": 1,
-          "n": 1,
-          "stream": false,
-          "logprobs": null,
-          "stop": "\n"
+          "frequency_penalty": 0.0,
+          "presence_penalty": 0.0
         }),
-      ).timeout(const Duration(seconds: 120));
+      ).timeout(const Duration(seconds: 20));
+      recipe = json.decode(response.body)["choices"][0]["text"];
     } on Exception catch (_e) {
       print('$_e reached');
+    } finally {
+      Navigator.pushNamedAndRemoveUntil(context, "/recipe",(Route<dynamic> route) => false, arguments : RecipeArgument(recipe));
     }
-    return "";
   }
-
 }
-
-/*Future<String> generateRecipe() async {
-    String recipe = await openAI.complete(
-        "Write a recipe based on these ingredients and instructions:\n\nFrito Pie\n\nIngredients:\nFritos\nChili\nShredded cheddar cheese\nSweet white or red onions, diced small\nSour cream\n\nInstructions:",
-        50);
-    print("Testeeeeeeeeeeeeeeeeeee");
-    print(recipe);
-    return recipe;
-  }
-}*/
