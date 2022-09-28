@@ -26,6 +26,7 @@ dev_dependencies:
 
 
 flutter:
-
+  assets:
+    - assets/food.jpeg
   uses-material-design: true
 

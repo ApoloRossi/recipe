@@ -15,6 +15,7 @@ class RecipeDescription extends StatelessWidget {
         body: Center(
             child: Column(
           children:  [
+            const Image(image: AssetImage('assets/food.jpeg')),
             const Padding(
                 padding: EdgeInsets.fromLTRB(0, 16 , 0 , 0),
                 child: Text("Bom apetite", style: TextStyle(fontSize: 22))),
