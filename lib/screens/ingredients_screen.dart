@@ -13,7 +13,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> ingredientList = List.empty(growable: true);
+  List<String> ingredientsName = List.empty(growable: true);
+  List<Ingredient> ingredientList = List.empty(growable: true);
   final IngredientDao ingredientDao = IngredientDao();
   Map<String, bool> selectedFlag = {};
 
@@ -27,18 +28,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void fetchIngredientFromDataBase() async {
-    List<Ingredient> ingredientes = await ingredientDao.getIngredients();
+    ingredientList = await ingredientDao.getIngredients();
 
     setState(() {
-      for (var element in ingredientes) {
-        ingredientList.add(element.name);
+      ingredientsName.clear();
+      for (var element in ingredientList) {
+        ingredientsName.add(element.name);
       }
     });
   }
 
   void onTap(bool isSelected, int index) {
     setState(() {
-      selectedFlag[ingredientList[index]] = !isSelected;
+      selectedFlag[ingredientsName[index]] = !isSelected;
     });
   }
 
@@ -51,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void insertIngredient(String ingredient) {
     ingredientDao.insertIngredient(Ingredient(name: ingredient));
-    ingredientList.add(_textFieldController.text);
+    ingredientsName.add(_textFieldController.text);
   }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
@@ -109,24 +111,25 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                   child: ListView.builder(
                 itemBuilder: (builder, index) {
-                  selectedFlag[ingredientList[index]] =
-                      selectedFlag[ingredientList[index]] ?? false;
+                  selectedFlag[ingredientsName[index]] =
+                      selectedFlag[ingredientsName[index]] ?? false;
                   bool isSelected =
-                      selectedFlag[ingredientList[index]] ?? false;
+                      selectedFlag[ingredientsName[index]] ?? false;
 
                   return ListTile(
                       onTap: () => onTap(isSelected, index),
-                      title: Text(ingredientList[index]),
+                      title: Text(ingredientsName[index]),
                       leading: _buildSelectIcon(isSelected, context),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete),
                         color: Theme.of(context).primaryColor, onPressed: () {
-
+                          ingredientDao.deleteIngredient(ingredientList[index]);
+                          fetchIngredientFromDataBase();
                         },
                       ),
                   );
                 },
-                itemCount: ingredientList.length,
+                itemCount: ingredientsName.length,
               )),
               Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),

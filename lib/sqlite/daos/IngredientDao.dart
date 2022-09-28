@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:easy_recipe/sqlite/models/Ingredient.dart';
-import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -21,6 +20,11 @@ class IngredientDao {
 
     await db.insert('ingredients', ingredient.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<void> deleteIngredient(Ingredient ingredient) async {
+    final db = await getDatabase();
+    await db.delete('ingredients', where: 'id = ? ', whereArgs: [ingredient.id]);
   }
 
   Future<List<Ingredient>> getIngredients() async {
