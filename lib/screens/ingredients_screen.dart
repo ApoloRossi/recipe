@@ -117,7 +117,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   return ListTile(
                       onTap: () => onTap(isSelected, index),
                       title: Text(ingredientList[index]),
-                      leading: _buildSelectIcon(isSelected, context));
+                      leading: _buildSelectIcon(isSelected, context),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        color: Theme.of(context).primaryColor, onPressed: () {
+
+                        },
+                      ),
+                  );
                 },
                 itemCount: ingredientList.length,
               )),
