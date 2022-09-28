@@ -1,16 +1,42 @@
-# Projeto
+# Quero Receitas!
 
-A new Flutter project.
+Projeto final para a disciplina `Mobile Engineering`
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Objetivo
 
-A few resources to get you started if this is your first Flutter project:
+Desenvolver um App em Flutter utilizando as melhores práticas a para avaliação final da disciplina Mobile Engineering
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Estrutura criada
+
+- [Flutter](https://docs.flutter.dev/get-started/install)
+- [sqflite 2.0](https://pub.dev/packages/sqflite)
+
+### API Externa
+
+- [OpenAI](https://beta.openai.com/examples)
+
+### Rodar o projeto
+
+1. Clonar o projeto
+
+```bash
+$ mkdir ~/projects
+$ cd ~/projects
+$ git clone https://github.com/ApoloRossi/recipe.git
+```
+
+2. Rodar o projeto
+```bash
+$ cd ~/projects/recipe
+$ flutter run
+```
+
+### Descrição do projeto
+
+Foi desenvolvido um App de receitas utilizando o Flutter com persistência no sqflite
+para guardar os ingredientes que o usuário possui.
+Após a escolha dos ingredientes o usuário vai confirmar e enviar para o
+`openAI` o qual vai processar e devolver uma receita para o usuário fazer com os ingredientes
+que escolhidos.
