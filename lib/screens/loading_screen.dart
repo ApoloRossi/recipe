@@ -33,17 +33,16 @@ class _LoaderPageState extends State<LoaderPage> {
           ],
         ));
   }
-// "Write a recipe based on these ingredients and instructions:\n\nFrito Pie\n\nIngredients:\nFritos\nChili\nShredded cheddar cheese\nSweet white or red onions, diced small\nSour cream\n\nInstructions:"
+
   Future<void> generateRecipe() async {
 
-    // ingredients.ingredients.toString().replaceAllMapped(RegExp(), (match) { return '"${match.group(0)}"'; })
     try {
       var response = await http
           .post(
             Uri.parse("https://api.openai.com/v1/completions"),
             headers: {
               HttpHeaders.authorizationHeader:
-                  "Bearer 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",
+                  "Bearer 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",
               HttpHeaders.acceptHeader: "application/json",
               HttpHeaders.contentTypeHeader: "application/json",
             },

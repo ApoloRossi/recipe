@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void insertIngredient(String ingredient) {
     ingredientDao.insertIngredient(Ingredient(name: ingredient));
-    ingredientsName.add(_textFieldController.text);
+    fetchIngredientFromDataBase();
   }
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: const EdgeInsets.all(16),
                 child: (Text(
                   'Selecione os itens para a sua receita',
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headline5,
                   textAlign: TextAlign.center,
                 )),
               ),

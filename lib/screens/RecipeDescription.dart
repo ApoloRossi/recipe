@@ -13,7 +13,15 @@ class RecipeDescription extends StatelessWidget {
           title: Text("Sua receita"),
         ),
         body: Center(
-          child: Text(recipeArg.recipe),
-        ));
+            child: Column(
+          children:  [
+            const Padding(
+                padding: EdgeInsets.fromLTRB(0, 16 , 0 , 0),
+                child: Text("Bom apetite", style: TextStyle(fontSize: 22))),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Text(recipeArg.recipe, style: const TextStyle(fontSize: 18)))
+              ],
+        )));
   }
 }
