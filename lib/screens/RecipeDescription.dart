@@ -16,12 +16,16 @@ class RecipeDescription extends StatelessWidget {
         ),
         body: SingleChildScrollView(
         child : Center(
-            child: Column(
+            child: Stack(
           children: [
             const Image(image: AssetImage('assets/food.jpeg')),
             Card(
-              shape: BeveledRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+              elevation: 0,
+              margin: const EdgeInsets.fromLTRB(0, 280, 0, 0),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(30.00)
+                  )
                 ),
               child: Column(
                 children: [

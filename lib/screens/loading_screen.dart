@@ -42,7 +42,7 @@ class _LoaderPageState extends State<LoaderPage> {
             Uri.parse("https://api.openai.com/v1/completions"),
             headers: {
               HttpHeaders.authorizationHeader:
-                  "Bearer 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",
+                  "Bearer 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",
               HttpHeaders.acceptHeader: "application/json",
               HttpHeaders.contentTypeHeader: "application/json",
             },
