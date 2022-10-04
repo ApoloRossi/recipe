@@ -3,6 +3,8 @@ import 'package:easy_recipe/sqlite/models/Ingredient.dart';
 import 'package:easy_recipe/sqlite/models/IngredientsArguments.dart';
 import 'package:flutter/material.dart';
 
+import '../resources/labels.dart';
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -61,14 +63,14 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Qual produto deseja adicionar?'),
+            title: const Text(ConstLabels.whichProductAdd),
             content: TextField(
               controller: _textFieldController,
-              decoration: InputDecoration(hintText: "nome do produto"),
+              decoration: const InputDecoration(hintText: ConstLabels.productName),
             ),
             actions: <Widget>[
               TextButton(
-                child: Text('Cancelar'),
+                child: const Text(ConstLabels.cancel),
                 onPressed: () {
                   setState(() {
                     Navigator.pop(context);
@@ -76,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               TextButton(
-                child: Text('OK'),
+                child: const Text(ConstLabels.OK),
                 onPressed: () {
                   setState(() {
                     insertIngredient(_textFieldController.text);
