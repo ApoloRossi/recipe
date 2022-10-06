@@ -5,4 +5,6 @@ class ConstLabels {
   static const productName = "nome do produto";
   static const cancel = "cancelar";
   static const OK = "OK";
+  static const Error = "Ocorreu um erro";
+  static const TryAgain = "Tentar novamente";
 }
