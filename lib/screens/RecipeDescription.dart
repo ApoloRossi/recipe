@@ -41,7 +41,6 @@ class RecipeDescription extends StatelessWidget {
                       onPressed: () {
                         Navigator.pop(context, true);
                       },
-                      child: Text("Gerar Nova Receita"),
                       style: ButtonStyle(
                           backgroundColor:
                           MaterialStateProperty.resolveWith<Color?>(
@@ -53,7 +52,8 @@ class RecipeDescription extends StatelessWidget {
                               RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                   borderRadius:
-                                  BorderRadius.circular(18.0)))))
+                                  BorderRadius.circular(18.0)))),
+                      child: const Text(ConstLabels.generateNewRecipe))
                 ],
               ),
             )

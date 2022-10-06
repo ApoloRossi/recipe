@@ -15,7 +15,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> ingredientsName = List.empty(growable: true);
   List<Ingredient> ingredientList = List.empty(growable: true);
   final IngredientDao ingredientDao = IngredientDao();
   Map<String, bool> selectedFlag = {};
@@ -24,25 +23,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     fetchIngredientFromDataBase();
   }
 
   void fetchIngredientFromDataBase() async {
     ingredientList = await ingredientDao.getIngredients();
-
-    setState(() {
-      ingredientsName.clear();
-      for (var element in ingredientList) {
-        ingredientsName.add(element.name);
-      }
-    });
+    setState(() {});
   }
 
   void onTap(bool isSelected, int index) {
     setState(() {
-      selectedFlag[ingredientsName[index]] = !isSelected;
+      selectedFlag[ingredientList[index].name] = !isSelected;
     });
   }
 
@@ -113,14 +105,14 @@ class _MyHomePageState extends State<MyHomePage> {
               Expanded(
                   child: ListView.builder(
                 itemBuilder: (builder, index) {
-                  selectedFlag[ingredientsName[index]] =
-                      selectedFlag[ingredientsName[index]] ?? false;
+                  selectedFlag[ingredientList[index].name] =
+                      selectedFlag[ingredientList[index].name] ?? false;
                   bool isSelected =
-                      selectedFlag[ingredientsName[index]] ?? false;
+                      selectedFlag[ingredientList[index].name] ?? false;
 
                   return ListTile(
                       onTap: () => onTap(isSelected, index),
-                      title: Text(ingredientsName[index]),
+                      title: Text(ingredientList[index].name),
                       leading: _buildSelectIcon(isSelected, context),
                       trailing: IconButton(
                         icon: const Icon(Icons.delete),
@@ -131,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                   );
                 },
-                itemCount: ingredientsName.length,
+                itemCount: ingredientList.length,
               )),
               Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
@@ -141,13 +133,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           onPressed: () {
                             _displayTextInputDialog(context);
                           },
-                          child: Text("Adicionar Ingrediente"),
                           style: ButtonStyle(
                               shape: MaterialStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18.0),
-                                      side: BorderSide(color: Colors.red))))))),
+                                      side: const BorderSide(color: Colors.red)))),
+                          child: const Text(ConstLabels.addIngredient)))),
               Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: SizedBox(
@@ -166,13 +158,12 @@ class _MyHomePageState extends State<MyHomePage> {
                             if (selectedIngredients.isEmpty) {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
-                                content: Text("Nenhum ingrediente selecionado"),
+                                content: Text(ConstLabels.noIngredientsSelected),
                               ));
                             } else {
                               Navigator.pushNamed(context, "/loader", arguments: IngredientsArguments(selectedIngredients));
                             }
                           },
-                          child: Text("Gerar Receita"),
                           style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.resolveWith<Color?>(
@@ -184,7 +175,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                       borderRadius:
-                                          BorderRadius.circular(18.0)))))))
+                                          BorderRadius.circular(18.0)))),
+                          child: const Text(ConstLabels.generateRecipe))))
             ],
           ),
         ) // This trailing comma makes auto-formatting nicer for build methods.

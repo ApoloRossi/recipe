@@ -5,7 +5,7 @@ import 'dart:io';
 class ApiService {
 
   static const _baseURL = "https://api.openai.com/v1/completions";
-  static const _token = "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";
+  static const _token = "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";
   static const _header = "application/json";
   static const _model = "text-davinci-002";
   static const _temperature = 0.3;
