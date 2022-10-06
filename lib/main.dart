@@ -1,4 +1,4 @@
-import 'package:easy_recipe/screens/RecipeDescription.dart';
+import 'package:easy_recipe/screens/recipe_description.dart';
 import 'package:easy_recipe/screens/ingredients_screen.dart';
 import 'package:easy_recipe/screens/loading_screen.dart';
 import 'package:flutter/material.dart';

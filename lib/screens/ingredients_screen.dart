@@ -1,9 +1,9 @@
 import 'package:easy_recipe/sqlite/daos/IngredientDao.dart';
 import 'package:easy_recipe/sqlite/models/Ingredient.dart';
-import 'package:easy_recipe/sqlite/models/IngredientsArguments.dart';
 import 'package:flutter/material.dart';
 
 import '../resources/labels.dart';
+import '../sqlite/models/IngredientsArguments.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -70,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
               TextButton(
-                child: const Text(ConstLabels.OK),
+                child: const Text(ConstLabels.ok),
                 onPressed: () {
                   setState(() {
                     insertIngredient(_textFieldController.text);
@@ -161,7 +161,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 content: Text(ConstLabels.noIngredientsSelected),
                               ));
                             } else {
-                              Navigator.pushNamed(context, "/loader", arguments: IngredientsArguments(selectedIngredients));
+                              var result = Navigator.pushNamed(context, "/loader", arguments: IngredientsArguments(selectedIngredients));
+                              print("RESULTADO!!!!! $result");
                             }
                           },
                           style: ButtonStyle(

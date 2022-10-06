@@ -1,6 +1,5 @@
 import 'package:easy_recipe/sqlite/models/RecipeArgument.dart';
 import 'package:flutter/material.dart';
-
 import '../resources/labels.dart';
 
 class RecipeDescription extends StatelessWidget {
@@ -31,8 +30,7 @@ class RecipeDescription extends StatelessWidget {
                 children: [
                   const Padding(
                       padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
-                      child:
-                          Text(ConstLabels.bomApetite, style: TextStyle(fontSize: 22))),
+                      child: Text(ConstLabels.bomApetite, style: TextStyle(fontSize: 22))),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       child: Text(recipeArg.recipe,

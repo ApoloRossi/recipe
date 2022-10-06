@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:easy_recipe/resources/labels.dart';
-import 'package:easy_recipe/screens/RecipeDescription.dart';
+import 'package:easy_recipe/screens/recipe_description.dart';
 import 'package:easy_recipe/services/api_service.dart';
 import 'package:easy_recipe/sqlite/models/IngredientsArguments.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +52,7 @@ class _LoaderPageState extends State<LoaderPage> {
           children: [
             const Padding(
               padding: EdgeInsets.all(16),
-              child: Text(ConstLabels.Error),
+              child: Text(ConstLabels.error),
             ),
             ElevatedButton(
                 onPressed: () {
@@ -60,7 +60,7 @@ class _LoaderPageState extends State<LoaderPage> {
                     hasException = false;
                   });
                 },
-                child: const Text(ConstLabels.TryAgain))
+                child: const Text(ConstLabels.tryAgain))
           ],
         ),
       ),

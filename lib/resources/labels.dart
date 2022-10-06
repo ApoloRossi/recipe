@@ -8,7 +8,7 @@ class ConstLabels {
   static const whichProductAdd = "Qual produto deseja adicionar?";
   static const productName = "nome do produto";
   static const cancel = "cancelar";
-  static const OK = "OK";
-  static const Error = "Ocorreu um erro";
-  static const TryAgain = "Tentar novamente";
+  static const ok = "OK";
+  static const error = "Ocorreu um erro";
+  static const tryAgain = "Tentar novamente";
 }
