@@ -17,21 +17,43 @@ class LoaderPage extends StatefulWidget {
 class _LoaderPageState extends State<LoaderPage> {
   String recipe = "";
   late IngredientsArguments ingredients;
+  var hasException = false;
 
   @override
   Widget build(BuildContext context) {
     ingredients = ModalRoute.of(context)!.settings.arguments as IngredientsArguments;
     generateRecipe();
 
-    return ColoredBox(
-        color: Colors.white,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            CircularProgressIndicator(
-                key: Key("progress"), backgroundColor: Colors.white)
-          ],
-        ));
+    if  (hasException) {
+      return Scaffold(
+        body: Center(
+          child: Column (
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Padding(padding: const EdgeInsets.all(16),
+              child: Text("Ocorreu um erro"),
+              ),
+              ElevatedButton(onPressed: () {
+                  setState(() {
+                    hasException = false;
+                  });
+              },
+                  child: Text("Tentar novamente"))
+            ],
+          ),
+        ),
+      );
+    } else {
+      return ColoredBox(
+          color: Colors.white,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              CircularProgressIndicator(
+                  key: Key("progress"), backgroundColor: Colors.white)
+            ],
+          ));
+    }
   }
 
   Future<void> generateRecipe() async {
@@ -42,7 +64,7 @@ class _LoaderPageState extends State<LoaderPage> {
             Uri.parse("https://api.openai.com/v1/completions"),
             headers: {
               HttpHeaders.authorizationHeader:
-                  "Bearer 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",
+                  "Bearer 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",
               HttpHeaders.acceptHeader: "application/json",
               HttpHeaders.contentTypeHeader: "application/json",
             },
@@ -58,16 +80,26 @@ class _LoaderPageState extends State<LoaderPage> {
             }),
           )
           .timeout(const Duration(seconds: 20));
-      recipe = json.decode(response.body)["choices"][0]["text"];
+      if (json.decode(response.body)["error"] != null) {
+        throw Exception("");
+      } else {
+        recipe = json.decode(response.body)["choices"][0]["text"];
+      }
     } on Exception catch (_e) {
+      hasException = true;
       print('$_e reached');
     } finally {
-      Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const RecipeDescription(),
-              settings: RouteSettings(arguments: RecipeArgument(recipe))),
-          ModalRoute.withName("/"));
+      if (hasException) {
+        setState(() {
+        });
+      } else {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const RecipeDescription(),
+                settings: RouteSettings(arguments: RecipeArgument(recipe))),
+            ModalRoute.withName("/"));
+      }
     }
   }
 }

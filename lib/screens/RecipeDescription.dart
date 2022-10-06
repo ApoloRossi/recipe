@@ -36,7 +36,24 @@ class RecipeDescription extends StatelessWidget {
                   Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       child: Text(recipeArg.recipe,
-                          style: const TextStyle(fontSize: 18)))
+                          style: const TextStyle(fontSize: 18))),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context, true);
+                      },
+                      child: Text("Gerar Nova Receita"),
+                      style: ButtonStyle(
+                          backgroundColor:
+                          MaterialStateProperty.resolveWith<Color?>(
+                                (Set<MaterialState> states) {
+                              return Colors.green;
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<
+                              RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                  borderRadius:
+                                  BorderRadius.circular(18.0)))))
                 ],
               ),
             )
