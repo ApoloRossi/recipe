@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.orange,
       ),
       routes: {
-        "/": (context) => const MyHomePage(title: 'Easy Recipe'),
+        "/": (context) => const IngredientsPage(title: 'Easy Recipe'),
         "/loader": (context) =>  const LoaderPage(),
-        "/recipe": (context) =>  const RecipeDescription(),
+        "/recipe": (context) =>  const RecipeDescriptionPage(),
       }
 
     );

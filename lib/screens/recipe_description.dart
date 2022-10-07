@@ -2,8 +2,8 @@ import 'package:easy_recipe/sqlite/models/RecipeArgument.dart';
 import 'package:flutter/material.dart';
 import '../resources/labels.dart';
 
-class RecipeDescription extends StatelessWidget {
-  const RecipeDescription({Key? key}) : super(key: key);
+class RecipeDescriptionPage extends StatelessWidget {
+  const RecipeDescriptionPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

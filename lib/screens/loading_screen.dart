@@ -84,7 +84,7 @@ class _LoaderPageState extends State<LoaderPage> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) => const RecipeDescription(),
+                builder: (context) => const RecipeDescriptionPage(),
                 settings: RouteSettings(arguments: RecipeArgument(recipe))),
             ModalRoute.withName("/"));
       }
