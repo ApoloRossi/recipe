@@ -29,5 +29,6 @@ flutter:
   assets:
     - assets/food.jpeg
     - assets/empty.png
+    - assets/hat.png
   uses-material-design: true
 

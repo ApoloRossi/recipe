@@ -2,6 +2,7 @@ import 'package:easy_recipe/sqlite/daos/IngredientDao.dart';
 import 'package:easy_recipe/sqlite/models/Ingredient.dart';
 import 'package:flutter/material.dart';
 
+import 'package:easy_recipe/resources/labels.dart';
 import '../resources/labels.dart';
 import '../sqlite/models/IngredientsArguments.dart';
 
@@ -25,6 +26,29 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     fetchIngredientFromDataBase();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: Text(
+            widget.title,
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              showListOrEmpty(context),
+              addIngredientButtonWidget(context),
+              generateRecipeButtonWidget(context)
+            ],
+          ),
+        ) // This trailing comma makes auto-formatting nicer for build methods.
+    );
   }
 
   void fetchIngredientFromDataBase() async {
@@ -58,7 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
             title: const Text(ConstLabels.whichProductAdd),
             content: TextField(
               controller: _textFieldController,
-              decoration: const InputDecoration(hintText: ConstLabels.productName),
+              decoration:
+                  const InputDecoration(hintText: ConstLabels.productName),
             ),
             actions: <Widget>[
               TextButton(
@@ -84,116 +109,128 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: (Text(
-                  ConstLabels.selectedItems,
-                  style: Theme.of(context).textTheme.headline6,
-                  textAlign: TextAlign.center,
-                )),
-              ),
-              ingredientsListWidget(context),
-              addIngredientButtonWidget(context),
-              generateRecipeButtonWidget(context)
-            ],
-          ),
-        ) // This trailing comma makes auto-formatting nicer for build methods.
-        );
+  Widget showListOrEmpty(BuildContext context) {
+    if (ingredientList.isEmpty) {
+      return emptyStateWidget();
+    } else {
+      return ingredientsListWidget(context);
+    }
+  }
+
+  Expanded emptyStateWidget() {
+    return Expanded(
+        child: Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        Image(image: AssetImage('assets/empty.png')),
+        Padding(
+            padding: EdgeInsets.all(24),
+            child:
+                Text(ConstLabels.emptyList, style: TextStyle(fontSize: 16)))
+      ],
+    ));
   }
 
   Expanded ingredientsListWidget(BuildContext context) {
     return Expanded(
-                child: ListView.builder(
-              itemBuilder: (builder, index) {
-                selectedFlag[ingredientList[index].name] =
-                    selectedFlag[ingredientList[index].name] ?? false;
-                bool isSelected =
-                    selectedFlag[ingredientList[index].name] ?? false;
+        child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Padding(padding: EdgeInsets.all(16), child:
+               Image(image: AssetImage('assets/hat.png'), fit: BoxFit.scaleDown, width: 180)),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: (Text(
+              ConstLabels.selectedItems,
+              style: Theme.of(context).textTheme.headline6,
+              textAlign: TextAlign.center,
+            )),
+          ),
+          Expanded(
+              child: ListView.builder(
+            itemBuilder: (builder, index) {
+              selectedFlag[ingredientList[index].name] =
+                  selectedFlag[ingredientList[index].name] ?? false;
+              bool isSelected =
+                  selectedFlag[ingredientList[index].name] ?? false;
 
-                return ListTile(
-                    onTap: () => onTap(isSelected, index),
-                    title: Text(ingredientList[index].name),
-                    leading: _buildSelectIcon(isSelected, context),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete),
-                      color: Theme.of(context).primaryColor, onPressed: () async {
-                        if(await ingredientDao.deleteIngredient(ingredientList[index])) {
-                          selectedFlag.remove(ingredientList[index].name);
-                        }
-                        fetchIngredientFromDataBase();
-                      },
-                    ),
-                );
-              },
-              itemCount: ingredientList.length,
-            ));
+              return ListTile(
+                onTap: () => onTap(isSelected, index),
+                title: Text(ingredientList[index].name),
+                leading: _buildSelectIcon(isSelected, context),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  color: Theme.of(context).primaryColor,
+                  onPressed: () async {
+                    if (await ingredientDao
+                        .deleteIngredient(ingredientList[index])) {
+                      selectedFlag.remove(ingredientList[index].name);
+                    }
+                    fetchIngredientFromDataBase();
+                  },
+                ),
+              );
+            },
+            itemCount: ingredientList.length,
+          ))
+        ]));
   }
 
   Padding addIngredientButtonWidget(BuildContext context) {
     return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          _displayTextInputDialog(context);
-                        },
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: const BorderSide(color: Colors.red)))),
-                        child: const Text(ConstLabels.addIngredient))));
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+        child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+                onPressed: () {
+                  _displayTextInputDialog(context);
+                },
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: const BorderSide(color: Colors.red)))),
+                child: const Text(ConstLabels.addIngredient,
+                    style: TextStyle(color: Colors.white)))));
   }
 
   Padding generateRecipeButtonWidget(BuildContext context) {
     return Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          final List<String> selectedIngredients =
-                              List.empty(growable: true);
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+        child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+                onPressed: () {
+                  final List<String> selectedIngredients =
+                      List.empty(growable: true);
 
-                          for (var element in selectedFlag.entries) {
-                            if (element.value == true) {
-                              selectedIngredients.add("${element.key}\n");
-                            }
-                          }
+                  for (var element in selectedFlag.entries) {
+                    if (element.value == true) {
+                      selectedIngredients.add("${element.key}\n");
+                    }
+                  }
 
-                          if (selectedIngredients.isEmpty) {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text(ConstLabels.noIngredientsSelected),
-                            ));
-                          } else {
-                            Navigator.pushNamed(context, "/loader", arguments: IngredientsArguments(selectedIngredients));
-                          }
-                        },
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.resolveWith<Color?>(
-                              (Set<MaterialState> states) {
-                                return Colors.green;
-                              },
-                            ),
-                            shape: MaterialStateProperty.all<
-                                    RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(18.0)))),
-                        child: const Text(ConstLabels.generateRecipe))));
+                  if (selectedIngredients.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text(ConstLabels.noIngredientsSelected),
+                    ));
+                  } else {
+                    Navigator.pushNamed(context, "/loader",
+                        arguments: IngredientsArguments(selectedIngredients));
+                  }
+                },
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color?>(
+                      (Set<MaterialState> states) {
+                        return Colors.green;
+                      },
+                    ),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0)))),
+                child: const Text(ConstLabels.generateRecipe,
+                    style: TextStyle(color: Colors.white)))));
   }
 }
