@@ -80,6 +80,7 @@ class _LoaderPageState extends State<LoaderPage> {
     } finally {
       if (hasException) {
         setState(() {});
+        hasException = false;
       } else {
         Navigator.pushAndRemoveUntil(
             context,

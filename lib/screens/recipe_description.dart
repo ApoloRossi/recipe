@@ -37,7 +37,7 @@ class RecipeDescription extends StatelessWidget {
                           style: const TextStyle(fontSize: 18))),
                   ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context, true);
+                        Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
                       },
                       style: ButtonStyle(
                           backgroundColor:
