@@ -1,4 +1,4 @@
-# Quero Receitas!
+# Receita Fácil!
 
 Projeto final para a disciplina `Mobile Engineering`
 
