@@ -5,7 +5,7 @@ import 'dart:io';
 class ApiService {
 
   static const _baseURL = "https://api.openai.com/v1/completions";
-  static const _token = "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";
+  static const _token = "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";
   static const _header = "application/json";
   static const _model = "text-davinci-002";
   static const _temperature = 0.3;
@@ -15,6 +15,13 @@ class ApiService {
   static const _presencePenalty = 0.0;
 
   Future<http.Response> generateRecipe(List<String> ingredients) async {
+
+    var buffer = StringBuffer();
+
+    for (var element in ingredients) {
+      buffer.write(element);
+    }
+
     return http
         .post(
           Uri.parse(_baseURL),
@@ -27,7 +34,7 @@ class ApiService {
           body: jsonEncode({
             "model": _model,
             "prompt":
-                "Write a recipe based on these ingredients and instructions:\n\n${ingredients.toString().replaceAll(",", "").replaceAll("[", "").replaceAll("]", "").replaceAll(" ", "")}\n\nInstructions:",
+                "Write a recipe based on these ingredients and instructions:\n\nIngredients:\n${buffer.toString()}\nInstructions:",
             "temperature": _temperature,
             "max_tokens": _maxTokens,
             "top_p": _topP,

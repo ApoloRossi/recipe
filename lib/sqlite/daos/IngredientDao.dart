@@ -22,9 +22,10 @@ class IngredientDao {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<void> deleteIngredient(Ingredient ingredient) async {
+  Future<bool> deleteIngredient(Ingredient ingredient) async {
     final db = await getDatabase();
-    await db.delete('ingredients', where: 'id = ? ', whereArgs: [ingredient.id]);
+    int result = await db.delete('ingredients', where: 'id = ? ', whereArgs: [ingredient.id]);
+    return result == 1;
   }
 
   Future<List<Ingredient>> getIngredients() async {

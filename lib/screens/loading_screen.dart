@@ -23,11 +23,11 @@ class _LoaderPageState extends State<LoaderPage> {
   Widget build(BuildContext context) {
     ingredients =
         ModalRoute.of(context)!.settings.arguments as IngredientsArguments;
-    generateRecipe();
 
     if (hasException) {
       return errorWidget();
     } else {
+      generateRecipe();
       return progressWidget();
     }
   }
@@ -80,7 +80,6 @@ class _LoaderPageState extends State<LoaderPage> {
     } finally {
       if (hasException) {
         setState(() {});
-        hasException = false;
       } else {
         Navigator.pushAndRemoveUntil(
             context,

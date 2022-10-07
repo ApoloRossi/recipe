@@ -1,5 +1,6 @@
 class ConstLabels {
   static const appName = "Sua receita";
+  static const selectedItems = "Selecione os itens para a sua receita";
   static const addIngredient = "Adicionar Ingrediente";
   static const noIngredientsSelected = "Nenhum ingrediente selecionado";
   static const generateRecipe = "Gerar Receita";

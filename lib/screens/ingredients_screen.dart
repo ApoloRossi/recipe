@@ -97,90 +97,103 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: (Text(
-                  'Selecione os itens para a sua receita',
-                  style: Theme.of(context).textTheme.headline5,
+                  ConstLabels.selectedItems,
+                  style: Theme.of(context).textTheme.headline6,
                   textAlign: TextAlign.center,
                 )),
               ),
-              Expanded(
-                  child: ListView.builder(
-                itemBuilder: (builder, index) {
-                  selectedFlag[ingredientList[index].name] =
-                      selectedFlag[ingredientList[index].name] ?? false;
-                  bool isSelected =
-                      selectedFlag[ingredientList[index].name] ?? false;
-
-                  return ListTile(
-                      onTap: () => onTap(isSelected, index),
-                      title: Text(ingredientList[index].name),
-                      leading: _buildSelectIcon(isSelected, context),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        color: Theme.of(context).primaryColor, onPressed: () {
-                          ingredientDao.deleteIngredient(ingredientList[index]);
-                          fetchIngredientFromDataBase();
-                        },
-                      ),
-                  );
-                },
-                itemCount: ingredientList.length,
-              )),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                  child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            _displayTextInputDialog(context);
-                          },
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18.0),
-                                      side: const BorderSide(color: Colors.red)))),
-                          child: const Text(ConstLabels.addIngredient)))),
-              Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                  child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            final List<String> selectedIngredients =
-                                List.empty(growable: true);
-
-                            for (var element in selectedFlag.entries) {
-                              if (element.value == true) {
-                                selectedIngredients.add("${element.key}\n");
-                              }
-                            }
-
-                            if (selectedIngredients.isEmpty) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text(ConstLabels.noIngredientsSelected),
-                              ));
-                            } else {
-                              var result = Navigator.pushNamed(context, "/loader", arguments: IngredientsArguments(selectedIngredients));
-                              print("RESULTADO!!!!! $result");
-                            }
-                          },
-                          style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.resolveWith<Color?>(
-                                (Set<MaterialState> states) {
-                                  return Colors.green;
-                                },
-                              ),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(18.0)))),
-                          child: const Text(ConstLabels.generateRecipe))))
+              ingredientsListWidget(context),
+              addIngredientButtonWidget(context),
+              generateRecipeButtonWidget(context)
             ],
           ),
         ) // This trailing comma makes auto-formatting nicer for build methods.
         );
+  }
+
+  Expanded ingredientsListWidget(BuildContext context) {
+    return Expanded(
+                child: ListView.builder(
+              itemBuilder: (builder, index) {
+                selectedFlag[ingredientList[index].name] =
+                    selectedFlag[ingredientList[index].name] ?? false;
+                bool isSelected =
+                    selectedFlag[ingredientList[index].name] ?? false;
+
+                return ListTile(
+                    onTap: () => onTap(isSelected, index),
+                    title: Text(ingredientList[index].name),
+                    leading: _buildSelectIcon(isSelected, context),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      color: Theme.of(context).primaryColor, onPressed: () async {
+                        if(await ingredientDao.deleteIngredient(ingredientList[index])) {
+                          selectedFlag.remove(ingredientList[index].name);
+                        }
+                        fetchIngredientFromDataBase();
+                      },
+                    ),
+                );
+              },
+              itemCount: ingredientList.length,
+            ));
+  }
+
+  Padding addIngredientButtonWidget(BuildContext context) {
+    return Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          _displayTextInputDialog(context);
+                        },
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: const BorderSide(color: Colors.red)))),
+                        child: const Text(ConstLabels.addIngredient))));
+  }
+
+  Padding generateRecipeButtonWidget(BuildContext context) {
+    return Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          final List<String> selectedIngredients =
+                              List.empty(growable: true);
+
+                          for (var element in selectedFlag.entries) {
+                            if (element.value == true) {
+                              selectedIngredients.add("${element.key}\n");
+                            }
+                          }
+
+                          if (selectedIngredients.isEmpty) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text(ConstLabels.noIngredientsSelected),
+                            ));
+                          } else {
+                            Navigator.pushNamed(context, "/loader", arguments: IngredientsArguments(selectedIngredients));
+                          }
+                        },
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.resolveWith<Color?>(
+                              (Set<MaterialState> states) {
+                                return Colors.green;
+                              },
+                            ),
+                            shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(18.0)))),
+                        child: const Text(ConstLabels.generateRecipe))));
   }
 }
