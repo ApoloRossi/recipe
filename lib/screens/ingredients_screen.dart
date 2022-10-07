@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Padding(padding: EdgeInsets.all(16), child:
-               Image(image: AssetImage('assets/hat.png'), fit: BoxFit.scaleDown, width: 180)),
+               Image(image: AssetImage('assets/chef-hat.png'))),
           Padding(
             padding: const EdgeInsets.all(16),
             child: (Text(
