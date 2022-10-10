@@ -38,5 +38,5 @@ $ flutter run
 Foi desenvolvido um App de receitas utilizando o Flutter com persistência no sqflite
 para guardar os ingredientes que o usuário possui.
 Após a escolha dos ingredientes o usuário vai confirmar e enviar para o
-`openAI` o qual vai processar e devolver uma receita para o usuário fazer com os ingredientes
+`openAI` o qual vai processar e devolver uma receita para o usuário fazer com os ingredientes que foram
 que escolhidos.
